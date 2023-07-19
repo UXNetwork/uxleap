@@ -2,24 +2,15 @@
 
 #include <thread>
 
-#define BOOST_TEST_MODULE message_buffer
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace {
 size_t mb_size(boost::asio::mutable_buffer& mb) {
-#if BOOST_VERSION >= 106600
    return mb.size();
-#else
-   return boost::asio::detail::buffer_size_helper(mb);
-#endif
 }
 
 void* mb_data(boost::asio::mutable_buffer& mb) {
-#if BOOST_VERSION >= 106600
    return mb.data();
-#else
-   return boost::asio::detail::buffer_cast_helper(mb);
-#endif
 }
 }
 

@@ -32,6 +32,7 @@
 #include <fc/log/logger_config.hpp>
 #include <fc/scoped_exit.hpp>
 #include <fc/variant_object.hpp>
+#include <bls12-381.hpp>
 
 #include <new>
 #include <shared_mutex>
@@ -338,6 +339,8 @@ struct controller_impl {
       set_activation_handler<builtin_protocol_feature_t::get_code_hash>();
       set_activation_handler<builtin_protocol_feature_t::get_block_num>();
       set_activation_handler<builtin_protocol_feature_t::crypto_primitives>();
+      set_activation_handler<builtin_protocol_feature_t::bls_primitives>();
+      bls12_381::init();
 
       self.irreversible_block.connect([this](const block_state_ptr& bsp) {
          // producer_plugin has already asserted irreversible_block signal is
@@ -3841,6 +3844,22 @@ void controller_impl::on_activation<builtin_protocol_feature_t::crypto_primitive
       add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "blake2_f" );
       add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "sha3" );
       add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "k1_recover" );
+   } );
+}
+
+template<>
+void controller_impl::on_activation<builtin_protocol_feature_t::bls_primitives>() {
+   db.modify( db.get<protocol_state_object>(), [&]( auto& ps ) {
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g1_add" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g2_add" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g1_mul" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g2_mul" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g1_exp" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g2_exp" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_pairing" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g1_map" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_g2_map" );
+      add_intrinsic_to_whitelist( ps.whitelisted_intrinsics, "bls_fp_mod" );
    } );
 }
 
