@@ -15,7 +15,7 @@ apt-get install -y \
     libgmp-dev \
     libncurses5 \
     libssl-dev \
-    libstdc++-10-dev \
+    libstdc++-12-dev \
     libtinfo-dev \
     libzstd-dev \
     python3 \
