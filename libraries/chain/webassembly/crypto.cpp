@@ -7,6 +7,9 @@
 #include <fc/crypto/sha3.hpp>
 #include <fc/crypto/k1_recover.hpp>
 #include <bn256/bn256.h>
+// need to define this macro for pinned build since it uses the nonstd span of bn256 which
+// comes without include guards and thus conflicts with the nonstd span impl of bls12-381
+#define NONSTDSPAN
 #include <bls12-381.hpp>
 
 namespace {
